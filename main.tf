@@ -42,3 +42,24 @@ resource "aws_security_group" "web_sg" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+
+# EC2
+resource "aws_instance" "web_server" {
+  ami = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = <<-EOF
+  #!/bin/bash
+  apt-get update -y
+  apt-get install -y ngnix
+  systemctl start nginx
+  systemctl enable nginx
+  echo "<h1>Build with Terraform.</h1>" > /var/www/html/index.html
+  EOF
+
+  tags = {
+    Name = "Demo-Server"
+    Environment = "Development"
+  }
+}
