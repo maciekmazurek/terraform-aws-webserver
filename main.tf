@@ -52,7 +52,7 @@ resource "aws_instance" "web_server" {
   user_data = <<-EOF
   #!/bin/bash
   apt-get update -y
-  apt-get install -y ngnix
+  apt-get install -y nginx
   systemctl start nginx
   systemctl enable nginx
   echo "<h1>Build with Terraform.</h1>" > /var/www/html/index.html
